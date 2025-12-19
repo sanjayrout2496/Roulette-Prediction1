@@ -5,32 +5,34 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body{
-  background:#111;
+  background:#0f0f0f;
   color:#fff;
   font-family:Arial;
   text-align:center;
   padding:20px;
 }
 button{
-  padding:14px 26px;
-  font-size:17px;
+  padding:14px 28px;
+  font-size:18px;
   background:gold;
   border:none;
   border-radius:8px;
-  margin-top:10px;
-}
-#result{
-  margin-top:15px;
-  font-size:20px;
 }
 .box{
   background:#1e1e1e;
   padding:15px;
-  border-radius:10px;
   margin-top:20px;
+  border-radius:10px;
 }
-.hot{ color:#ff4d4d; }
-.cold{ color:#4da6ff; }
+.hot{color:#ff4d4d;}
+.cold{color:#4da6ff;}
+.ad{
+  background:#2a2a2a;
+  margin-top:25px;
+  padding:15px;
+  border-radius:10px;
+  color:#ccc;
+}
 </style>
 </head>
 
@@ -40,56 +42,53 @@ button{
 
 <button onclick="predict()">PREDICT</button>
 
-<div id="result"></div>
+<div class="box" id="result"></div>
 
 <div class="box">
-  <h3 class="hot">🔥 Hot Numbers</h3>
+  <h3 class="hot">🔥 Hot Numbers (Top 5)</h3>
   <div id="hot"></div>
 </div>
 
 <div class="box">
-  <h3 class="cold">❄️ Cold Numbers</h3>
+  <h3 class="cold">❄️ Cold Numbers (Top 5)</h3>
   <div id="cold"></div>
 </div>
 
+<div class="ad">
+  📢 Advertisement Space  
+  <br>Your ad here
+</div>
+
 <script>
-let history = [];
+let history=[];
 
 function predict(){
-  let number = Math.floor(Math.random()*37);
-  history.push(number);
-  if(history.length > 20) history.shift();
+  let num=Math.floor(Math.random()*37);
+  history.push(num);
+  if(history.length>30)history.shift();
 
-  let red=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
-  let color = number==0 ? "GREEN" : red.includes(number) ? "RED" : "BLACK";
+  document.getElementById("result").innerHTML=
+    "Number: <b>"+num+"</b>";
 
-  document.getElementById("result").innerHTML =
-    "Number: <b>"+number+"</b><br>Color: <b>"+color+"</b>";
-
-  calculateHotCold();
+  updateHotCold();
 }
 
-function calculateHotCold(){
-  let count = {};
-  for(let i=0;i<history.length;i++){
-    count[history[i]] = (count[history[i]] || 0) + 1;
-  }
+function updateHotCold(){
+  let count={};
+  history.forEach(n=>count[n]=(count[n]||0)+1);
 
-  let sorted = Object.entries(count).sort((a,b)=>b[1]-a[1]);
+  let sorted=Object.entries(count).sort((a,b)=>b[1]-a[1]);
 
-  let hot = sorted.slice(0,3).map(x=>x[0]).join(", ");
-  let cold = [];
+  let hot=sorted.slice(0,5).map(x=>x[0]).join(", ");
 
+  let cold=[];
   for(let i=0;i<=36;i++){
     if(!count[i]) cold.push(i);
-    if(cold.length==3) break;
+    if(cold.length===5) break;
   }
 
-  document.getElementById("hot").innerHTML =
-    hot.length ? hot : "Calculating...";
-
-  document.getElementById("cold").innerHTML =
-    cold.length ? cold.join(", ") : "Calculating...";
+  document.getElementById("hot").innerHTML=hot||"Calculating...";
+  document.getElementById("cold").innerHTML=cold.join(", ")||"Calculating...";
 }
 </script>
 
