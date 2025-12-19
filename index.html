@@ -1,48 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Roulette Prediction</title>
+<title>Payment Required</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body{
-  background:#111;
+  background:#000;
   color:#fff;
   font-family:Arial;
   text-align:center;
-  padding-top:40px;
+  padding-top:30px;
+}
+img{
+  width:250px;
+  border-radius:10px;
 }
 button{
+  margin-top:20px;
   padding:15px 30px;
   font-size:18px;
   background:gold;
   border:none;
   border-radius:8px;
 }
-#result{
-  margin-top:20px;
-  font-size:22px;
+.note{
+  margin-top:15px;
+  font-size:14px;
+  color:#ccc;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🎰 Roulette Prediction</h1>
-<p>Click button to get prediction</p>
+<h2>🔐 Payment Required</h2>
+<p>Scan QR & Pay to Access Roulette Prediction</p>
 
-<button onclick="predict()">PREDICT</button>
+<img src="qr.png" alt="QR Code">
 
-<div id="result"></div>
+<p class="note">After payment click below button</p>
+
+<button onclick="go()">I HAVE PAID</button>
 
 <script>
-function predict(){
-  let number = Math.floor(Math.random()*37);
-  let red=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
-  let color = number==0 ? "GREEN" : red.includes(number) ? "RED" : "BLACK";
-  document.getElementById("result").innerHTML =
-    "Number: "+number+"<br>Color: "+color;
+function go(){
+  window.location.href="roulette.html";
 }
 </script>
 
 </body>
-  </html>
+</html>
+
