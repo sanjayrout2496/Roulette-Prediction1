@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Roulette Prediction</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+  background:#111;
+  color:#fff;
+  font-family:Arial;
+  text-align:center;
+  padding-top:40px;
+}
+button{
+  padding:15px 30px;
+  font-size:18px;
+  background:gold;
+  border:none;
+  border-radius:8px;
+}
+#result{
+  margin-top:20px;
+  font-size:22px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎰 Roulette Prediction</h1>
+<p>Click button to get prediction</p>
+
+<button onclick="predict()">PREDICT</button>
+
+<div id="result"></div>
+
+<script>
+function predict(){
+  let number = Math.floor(Math.random()*37);
+  let red=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+  let color = number==0 ? "GREEN" : red.includes(number) ? "RED" : "BLACK";
+  document.getElementById("result").innerHTML =
+    "Number: "+number+"<br>Color: "+color;
+}
+</script>
+
+</body>
+</html>
