@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Access Verification</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+  background:#111;
+  color:#fff;
+  font-family:Arial;
+  text-align:center;
+  padding-top:40px;
+}
+input{
+  padding:12px;
+  font-size:18px;
+  border-radius:6px;
+  border:none;
+  width:220px;
+}
+button{
+  margin-top:15px;
+  padding:12px 26px;
+  background:gold;
+  border:none;
+  border-radius:8px;
+  font-size:16px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🔑 Enter Lifetime Access Password</h2>
+
+<input type="password" id="pass" placeholder="Enter password">
+<br>
+<button onclick="check()">UNLOCK</button>
+
+<p id="msg"></p>
+
+<script>
+function check(){
+  let p = document.getElementById("pass").value;
+  if(p === "Dhi1@3reN"){
+    window.location.href="roulette.html";
+  }else{
+    document.getElementById("msg").innerHTML="❌ Wrong Password";
+  }
+}
+</script>
+
+</body>
+</html>
