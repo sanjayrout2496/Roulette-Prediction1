@@ -100,7 +100,6 @@ button:disabled{background:#555;}
   <h3>📜 Last Predictions</h3>
   <div class="history" id="history"></div>
 </div>
-
 <script>
 let historyNums=[];
 let lastPred=[];
@@ -117,10 +116,16 @@ function getColor(num){
 function predict(){
   let nums=[];
 
-  // 5 straight bet numbers
+  // generate 5 straight bet numbers
   while(nums.length<5){
     let n=Math.floor(Math.random()*37);
     if(!nums.includes(n)) nums.push(n);
+  }
+
+  // ✅ STORE HISTORY (VERY IMPORTANT)
+  nums.forEach(n=>historyNums.push(n));
+  if(historyNums.length>100){
+    historyNums=historyNums.slice(-100);
   }
 
   let redCount=0;
@@ -131,19 +136,11 @@ function predict(){
     else if(blackNumbers.includes(n)) blackCount++;
   });
 
-  // ✅ FINAL COLOUR LOGIC (AS YOU SAID)
-  let finalColor="";
-  let colorClass="";
+  // colour decision
+  let finalColor = redCount > blackCount ? "RED" : "BLACK";
+  let colorClass = finalColor==="RED" ? "red" : "black";
 
-  if(redCount > blackCount){
-    finalColor="RED";
-    colorClass="red";
-  }else{
-    finalColor="BLACK";
-    colorClass="black";
-  }
-
-  // show straight numbers with correct colours
+  // show straight numbers
   document.getElementById("numbers").innerHTML =
     nums.map(n=>{
       let c=getColor(n);
@@ -151,18 +148,44 @@ function predict(){
       return `<div class="card ${cls}">${n}</div>`;
     }).join("");
 
-  // show colour prediction in SAME colour
+  // show colour prediction
   document.getElementById("color").innerHTML =
-    `<b>Final Colour Prediction:</b> 
+    `<b>Final Colour Prediction:</b>
      <span class="${colorClass}">${finalColor}</span>`;
 
-  // last prediction history
+  // last predictions history
   lastPred.unshift(nums.join(", ")+" → "+finalColor);
   if(lastPred.length>10) lastPred.pop();
   document.getElementById("history").innerHTML = lastPred.join("<br>");
+
+  // ✅🔥 THIS LINE WAS MISSING – NOW FIXED
+  updateHotCold();
+}
+
+function updateHotCold(){
+  if(historyNums.length===0){
+    document.getElementById("hot").innerHTML="Waiting...";
+    document.getElementById("cold").innerHTML="Waiting...";
+    return;
+  }
+
+  let count={};
+  historyNums.forEach(n=>count[n]=(count[n]||0)+1);
+
+  let sorted=Object.entries(count).sort((a,b)=>b[1]-a[1]);
+
+  let hotNums = sorted.slice(0,5).map(x=>x[0]).join(", ");
+
+  let cold=[];
+  for(let i=0;i<=36;i++){
+    if(!count[i]) cold.push(i);
+    if(cold.length===5) break;
+  }
+
+  document.getElementById("hot").innerHTML = hotNums;
+  document.getElementById("cold").innerHTML = cold.join(", ");
 }
 </script>
-
 
 
 </body>
