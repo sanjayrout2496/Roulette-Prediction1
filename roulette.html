@@ -62,7 +62,7 @@ button:disabled{background:#555;}
   padding:6px 12px;
   border-radius:20px;
   font-weight:bold;
-}
+} .green{color:#00ff7f;}
 </style>
 </head>
 
@@ -102,17 +102,17 @@ button:disabled{background:#555;}
 
 <script>
 let historyNums=[];
-let lastPred=[];
-let redNumbers=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
-let cooldown=false;
+
+const redNumbers=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+const blackNumbers=[2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35];
+
+function getColor(num){
+  if(num===0) return "GREEN";
+  if(redNumbers.includes(num)) return "RED";
+  return "BLACK";
+}
 
 function predict(){
-  if(cooldown) return;
-
-  cooldown=true;
-  let btn=document.getElementById("btn");
-  btn.disabled=true;
-
   let nums=[];
   while(nums.length<5){
     let n=Math.floor(Math.random()*37);
@@ -120,48 +120,54 @@ function predict(){
   }
 
   nums.forEach(n=>historyNums.push(n));
-  if(historyNums.length>50) historyNums=historyNums.slice(-50);
+  if(historyNums.length>60) historyNums=historyNums.slice(-60);
 
-  let red=nums.filter(n=>redNumbers.includes(n)).length;
-  let black=nums.filter(n=>n!==0 && !redNumbers.includes(n)).length;
-  let color="GREEN";
-  if(red>black) color="RED";
-  else if(black>red) color="BLACK";
+  let redCount=0, blackCount=0, greenCount=0;
 
+  nums.forEach(n=>{
+    let c=getColor(n);
+    if(c==="RED") redCount++;
+    else if(c==="BLACK") blackCount++;
+    else greenCount++;
+  });
+
+  let finalColor="MIXED";
+  if(redCount>blackCount && redCount>greenCount) finalColor="RED";
+  else if(blackCount>redCount && blackCount>greenCount) finalColor="BLACK";
+  else if(greenCount>=2) finalColor="GREEN";
+
+  // show numbers with correct color
   document.getElementById("numbers").innerHTML =
-    nums.map(n=>`<div class="card">${n}</div>`).join("");
+    nums.map(n=>{
+      let c=getColor(n);
+      let colorClass=c==="RED"?"red":c==="BLACK"?"black":"green";
+      return `<div class="card ${colorClass}">${n}</div>`;
+    }).join("");
 
   document.getElementById("color").innerHTML =
-    `<span class="badge ${color=="RED"?"red":"black"}">${color}</span>`;
-
-  lastPred.unshift(nums.join(", ")+" | "+color);
-  if(lastPred.length>10) lastPred.pop();
-
-  document.getElementById("history").innerHTML = lastPred.join("<br>");
+    `<b>Colour Prediction:</b> ${finalColor}`;
 
   updateHotCold();
-
-  setTimeout(()=>{
-    cooldown=false;
-    btn.disabled=false;
-  },10000);
 }
 
 function updateHotCold(){
   let count={};
   historyNums.forEach(n=>count[n]=(count[n]||0)+1);
+
   let sorted=Object.entries(count).sort((a,b)=>b[1]-a[1]);
+
   document.getElementById("hot").innerHTML =
     sorted.slice(0,5).map(x=>x[0]).join(", ") || "—";
 
   let cold=[];
   for(let i=0;i<=36;i++){
     if(!count[i]) cold.push(i);
-    if(cold.length==5) break;
+    if(cold.length===5) break;
   }
   document.getElementById("cold").innerHTML = cold.join(", ") || "—";
 }
 </script>
+
 
 </body>
 </html>
