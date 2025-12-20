@@ -52,6 +52,7 @@ button:disabled{background:#555;}
 }
 .red{color:red;}
 .black{color:#ccc;}
+.green{color:#00ff7f;}
 .hot{color:#ff5555;}
 .cold{color:#4da6ff;}
 .history{
@@ -62,7 +63,7 @@ button:disabled{background:#555;}
   padding:6px 12px;
   border-radius:20px;
   font-weight:bold;
-} .green{color:#00ff7f;}
+} 
 </style>
 </head>
 
@@ -102,6 +103,7 @@ button:disabled{background:#555;}
 
 <script>
 let historyNums=[];
+let lastPred=[];
 
 const redNumbers=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
 const blackNumbers=[2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35];
@@ -114,59 +116,53 @@ function getColor(num){
 
 function predict(){
   let nums=[];
+
+  // 5 straight bet numbers
   while(nums.length<5){
     let n=Math.floor(Math.random()*37);
     if(!nums.includes(n)) nums.push(n);
   }
 
-  nums.forEach(n=>historyNums.push(n));
-  if(historyNums.length>60) historyNums=historyNums.slice(-60);
-
-  let redCount=0, blackCount=0, greenCount=0;
+  let redCount=0;
+  let blackCount=0;
 
   nums.forEach(n=>{
-    let c=getColor(n);
-    if(c==="RED") redCount++;
-    else if(c==="BLACK") blackCount++;
-    else greenCount++;
+    if(redNumbers.includes(n)) redCount++;
+    else if(blackNumbers.includes(n)) blackCount++;
   });
 
-  let finalColor="MIXED";
-  if(redCount>blackCount && redCount>greenCount) finalColor="RED";
-  else if(blackCount>redCount && blackCount>greenCount) finalColor="BLACK";
-  else if(greenCount>=2) finalColor="GREEN";
+  // ✅ FINAL COLOUR LOGIC (AS YOU SAID)
+  let finalColor="";
+  let colorClass="";
 
-  // show numbers with correct color
+  if(redCount > blackCount){
+    finalColor="RED";
+    colorClass="red";
+  }else{
+    finalColor="BLACK";
+    colorClass="black";
+  }
+
+  // show straight numbers with correct colours
   document.getElementById("numbers").innerHTML =
     nums.map(n=>{
       let c=getColor(n);
-      let colorClass=c==="RED"?"red":c==="BLACK"?"black":"green";
-      return `<div class="card ${colorClass}">${n}</div>`;
+      let cls=c==="RED"?"red":c==="BLACK"?"black":"green";
+      return `<div class="card ${cls}">${n}</div>`;
     }).join("");
 
+  // show colour prediction in SAME colour
   document.getElementById("color").innerHTML =
-    `<b>Colour Prediction:</b> ${finalColor}`;
+    `<b>Final Colour Prediction:</b> 
+     <span class="${colorClass}">${finalColor}</span>`;
 
-  updateHotCold();
-}
-
-function updateHotCold(){
-  let count={};
-  historyNums.forEach(n=>count[n]=(count[n]||0)+1);
-
-  let sorted=Object.entries(count).sort((a,b)=>b[1]-a[1]);
-
-  document.getElementById("hot").innerHTML =
-    sorted.slice(0,5).map(x=>x[0]).join(", ") || "—";
-
-  let cold=[];
-  for(let i=0;i<=36;i++){
-    if(!count[i]) cold.push(i);
-    if(cold.length===5) break;
-  }
-  document.getElementById("cold").innerHTML = cold.join(", ") || "—";
+  // last prediction history
+  lastPred.unshift(nums.join(", ")+" → "+finalColor);
+  if(lastPred.length>10) lastPred.pop();
+  document.getElementById("history").innerHTML = lastPred.join("<br>");
 }
 </script>
+
 
 
 </body>
