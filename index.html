@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Premium Roulette Prediction</title>
 </head>
+<script>
+function checkPassword() {
+  var password = prompt("Enter Access Password");
 
+  if (password === "Dhi1@3reN") {
+    window.location.href = "access.html";
+  } else {
+    alert("❌ Wrong Password! Please contact admin after payment.");
+  }
+}
+</script>
 <body style="margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;">
 
 <div style="max-width:420px;margin:30px auto;background:#ffffff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.1);padding:20px;">
@@ -50,20 +60,19 @@
     <strong>9310670071</strong>
   </p>
 
-  <button style="
-    width:100%;
-    padding:12px;
-    background:#ffb703;
-    border:none;
-    border-radius:8px;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-    margin-top:10px;
-  ">
-    ENTER PASSWORD
-  </button>
-
+<button onclick="checkPassword()" style="
+  width:100%;
+  padding:12px;
+  background:#ffb703;
+  border:none;
+  border-radius:8px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:10px;
+">
+  ENTER PASSWORD
+</button>
 </div>
 
 <div style="text-align:center;color:#777;font-size:13px;margin-top:10px;">
